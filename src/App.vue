@@ -4,6 +4,12 @@
 		<div class="col" v-for="colorSlot in store.getters.colorSlots" :key="colorSlot.id" :style="{ background: colorSlot.color }">
 			<div class="color_name">{{ colorSlot.color }}</div>
 			<div class="status" :class="{ lock: colorSlot.lock }" @click="toggleLock(colorSlot.id)"></div>
+
+			<div class="show_shades" @click="generateShades(colorSlot.color)">Shades</div>
+			<div class="shades" :class="{ show: store.getters.colorShades(colorSlot.id).length }">
+				<div class="shade" v-for="shade in store.getters.colorShades(colorSlot.id)" :key="shade" :style="{ background: '#' + shade }"></div>
+			</div>
+
 		</div>
 	</div>
 
@@ -14,7 +20,9 @@
 import { onMounted, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
 
+
 const store = useStore()
+
 
 function getRandomColor() {
 
@@ -49,9 +57,72 @@ function generateColors(e) {
 	}
 }
 
+function generateShades(color) {
+	let tints = calculate(color.slice(1), rgbTint)
+	let shade = calculate(color.slice(1), rgbShade).slice(1)
+	store.commit('SET_SHADES', { color: color, shades: tints.reverse().concat(shade) } )
+}
+
 function toggleLock(id) {
 	store.commit('TOGGLE_LOCK', id)
 }
+
+
+
+
+
+
+function pad(number, length) {
+    var str = '' + number;
+    while (str.length < length) {
+        str = '0' + str;
+    }
+    return str;
+}
+
+function intToHex(rgbint) {
+    return pad(Math.min(Math.max(Math.round(rgbint), 0), 255).toString(16), 2);
+}
+
+function hexToRGB(colorValue) {
+    return {
+        red: parseInt(colorValue.substr(0, 2), 16),
+        green: parseInt(colorValue.substr(2, 2), 16),
+        blue: parseInt(colorValue.substr(4, 2), 16)
+    }
+}
+
+function rgbToHex(rgb) {
+    return intToHex(rgb.red) + intToHex(rgb.green) + intToHex(rgb.blue);
+}
+
+function rgbShade(rgb, i) {
+    return {
+        red: rgb.red * (1 - 0.1 * i),
+        green: rgb.green * (1 - 0.1 * i),
+        blue: rgb.blue * (1 - 0.1 * i)
+    }
+}
+
+function rgbTint(rgb, i) {
+	return {
+		red: rgb.red + (255 - rgb.red) * i * 0.1,
+		green: rgb.green + (255 - rgb.green) * i * 0.1,
+		blue: rgb.blue + (255 - rgb.blue) * i * 0.1
+	}
+}
+
+function calculate(colorValue, shadeOrTint) {
+	var color = hexToRGB(colorValue);
+	var shadeValues = [];
+
+	for (var i = 0; i < 10; i++) {
+		shadeValues[i] = rgbToHex(shadeOrTint(color, i));
+	}
+	return shadeValues;
+}
+
+
 
 
 onMounted(() => {
@@ -84,6 +155,7 @@ html, body {
 }
 
 .col {
+	position: relative;
 	flex: 1;
 	display: flex;
 	flex-direction: column;
@@ -123,6 +195,44 @@ html, body {
 	&.lock {
 		background-image: url(@/assets/images/lock.svg);
 	}
+}
+
+.show_shades {
+	margin-top: 20px;
+	padding: 6px 10px;
+	font-size: 16px;
+	font-family: sans-serif;
+	background: rgba(255, 255, 255, 0.5);
+	border-radius: 6px;
+	cursor: pointer;
+	transition: background 0.15s;
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.9);
+	}
+}
+
+.shades {
+	display: none;
+	flex-direction: column;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+
+	&.show {
+		display: flex;
+	}
+}
+
+.shade {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 20px;
+	font-family: sans-serif;
+	background: rgba(255, 255, 255, 0.5);
+	cursor: pointer;
 }
 
 </style>
