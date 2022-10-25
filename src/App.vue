@@ -1,18 +1,37 @@
 <template>
-
 	<div class="cols">
-		<div class="col" v-for="colorSlot in store.getters.colorSlots" :key="colorSlot.id" :style="{ background: colorSlot.color }">
+		<div
+			class="col"
+			v-for="colorSlot in store.getters.colorSlots"
+			:key="colorSlot.id"
+			:style="{ background: colorSlot.color }"
+		>
 			<div class="color_name">{{ colorSlot.color }}</div>
-			<div class="status" :class="{ lock: colorSlot.lock }" @click="toggleLock(colorSlot.id)"></div>
+			<div
+				class="status"
+				:class="{ lock: colorSlot.lock }"
+				@click="toggleLock(colorSlot.id)"
+			></div>
 
 			<div class="show_shades" @click="generateShades(colorSlot.color)">Shades</div>
-			<div class="shades" :class="{ show: store.getters.colorShades(colorSlot.id).length }">
-				<div class="shade" v-for="shade in store.getters.colorShades(colorSlot.id)" :key="shade" :style="{ background: '#' + shade }"></div>
+			<div
+				class="shades"
+				:class="{
+					show: store.getters.colorShades(colorSlot.id).length,
+				}"
+			>
+				<div
+					class="shade"
+					v-for="shade in store.getters.colorShades(colorSlot.id)"
+					:key="shade"
+					:style="{ background: '#' + shade }"
+					@click="changeColor('#' + shade, colorSlot.id)"
+				>
+					<span>{{ '#' + shade }}</span>
+				</div>
 			</div>
-
 		</div>
 	</div>
-
 </template>
 
 
@@ -31,7 +50,7 @@ function getRandomColor() {
 	let color = ''
 
 	for (let i = 0; i < 6; i++) {
-		color += characters[Math.floor(Math.random() * characters.length )]
+		color += characters[Math.floor(Math.random() * characters.length)]
 	}
 
 	return '#' + color
@@ -39,10 +58,10 @@ function getRandomColor() {
 }
 
 function generateColors(e) {
-	if ( e !== undefined ) {
-		if ( e.code === 'Space' ) {
+	if (e !== undefined) {
+		if (e.code === 'Space') {
 			store.state.colorSlots.forEach((colorSlot) => {
-				if ( !colorSlot.lock ) {
+				if (!colorSlot.lock) {
 					store.commit('SET_COLOR', { id: colorSlot.id, newColor: getRandomColor() })
 				}
 			})
@@ -50,7 +69,7 @@ function generateColors(e) {
 	}
 	else {
 		store.state.colorSlots.forEach((colorSlot) => {
-			if ( !colorSlot.lock ) {
+			if (!colorSlot.lock) {
 				store.commit('SET_COLOR', { id: colorSlot.id, newColor: getRandomColor() })
 			}
 		})
@@ -60,48 +79,48 @@ function generateColors(e) {
 function generateShades(color) {
 	let tints = calculate(color.slice(1), rgbTint)
 	let shade = calculate(color.slice(1), rgbShade).slice(1)
-	store.commit('SET_SHADES', { color: color, shades: tints.reverse().concat(shade) } )
+	store.commit('SET_SHADES', { color: color, shades: tints.reverse().concat(shade) })
 }
 
 function toggleLock(id) {
 	store.commit('TOGGLE_LOCK', id)
 }
 
-
-
-
+function changeColor(newColor, id) {
+	store.commit('SET_COLOR', { id: id, newColor: newColor })
+}
 
 
 function pad(number, length) {
-    var str = '' + number;
-    while (str.length < length) {
-        str = '0' + str;
-    }
-    return str;
+	var str = '' + number;
+	while (str.length < length) {
+		str = '0' + str;
+	}
+	return str;
 }
 
 function intToHex(rgbint) {
-    return pad(Math.min(Math.max(Math.round(rgbint), 0), 255).toString(16), 2);
+	return pad(Math.min(Math.max(Math.round(rgbint), 0), 255).toString(16), 2);
 }
 
 function hexToRGB(colorValue) {
-    return {
-        red: parseInt(colorValue.substr(0, 2), 16),
-        green: parseInt(colorValue.substr(2, 2), 16),
-        blue: parseInt(colorValue.substr(4, 2), 16)
-    }
+	return {
+		red: parseInt(colorValue.substr(0, 2), 16),
+		green: parseInt(colorValue.substr(2, 2), 16),
+		blue: parseInt(colorValue.substr(4, 2), 16)
+	}
 }
 
 function rgbToHex(rgb) {
-    return intToHex(rgb.red) + intToHex(rgb.green) + intToHex(rgb.blue);
+	return intToHex(rgb.red) + intToHex(rgb.green) + intToHex(rgb.blue);
 }
 
 function rgbShade(rgb, i) {
-    return {
-        red: rgb.red * (1 - 0.1 * i),
-        green: rgb.green * (1 - 0.1 * i),
-        blue: rgb.blue * (1 - 0.1 * i)
-    }
+	return {
+		red: rgb.red * (1 - 0.1 * i),
+		green: rgb.green * (1 - 0.1 * i),
+		blue: rgb.blue * (1 - 0.1 * i)
+	}
 }
 
 function rgbTint(rgb, i) {
@@ -116,13 +135,11 @@ function calculate(colorValue, shadeOrTint) {
 	var color = hexToRGB(colorValue);
 	var shadeValues = [];
 
-	for (var i = 0; i < 10; i++) {
-		shadeValues[i] = rgbToHex(shadeOrTint(color, i));
+	for (var i = 0; i < 20; i++) {
+		shadeValues[i] = rgbToHex(shadeOrTint(color, (i/2)));
 	}
 	return shadeValues;
 }
-
-
 
 
 onMounted(() => {
@@ -138,14 +155,14 @@ onBeforeUnmount(() => {
 
 
 <style lang="scss">
-
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
 	min-height: 100vh;
 }
 
@@ -229,10 +246,22 @@ html, body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	font-size: 20px;
-	font-family: sans-serif;
-	background: rgba(255, 255, 255, 0.5);
 	cursor: pointer;
-}
 
+	& > span {
+		padding: 2px 8px;
+		font-size: 12px;
+		font-family: sans-serif;
+		background: rgba(255, 255, 255, 0.5);
+		border-radius: 6px;
+		opacity: 0;
+		user-select: none;
+	}
+
+	&:hover {
+		& > span {
+			opacity: 1;
+		}
+	}
+}
 </style>
