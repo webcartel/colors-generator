@@ -49,6 +49,12 @@ export default createStore({
 			return state.colorSlots
 		},
 
+		colorsWithoutHash: (state) => {
+			return state.colorSlots.map((colorSlot) => {
+				return colorSlot.color.slice(1)
+			})
+		},
+
 		colorShades: (state) => (id) => {
 			return state.colorSlots.filter((colorSlot) => {
 				if ( colorSlot.id === id ) {

@@ -36,7 +36,7 @@
 
 
 <script setup>
-import { onMounted, onBeforeUnmount } from 'vue';
+import { onMounted, onBeforeUpdate, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
 
 
@@ -88,6 +88,10 @@ function toggleLock(id) {
 
 function changeColor(newColor, id) {
 	store.commit('SET_COLOR', { id: id, newColor: newColor })
+}
+
+function updateHash() {
+	location.hash = store.getters.colorsWithoutHash.join('-') 
 }
 
 
@@ -145,6 +149,10 @@ function calculate(colorValue, shadeOrTint) {
 onMounted(() => {
 	generateColors()
 	document.addEventListener('keydown', generateColors)
+})
+
+onBeforeUpdate(() => {
+	updateHash()
 })
 
 onBeforeUnmount(() => {
