@@ -3,44 +3,8 @@ import { createStore } from 'vuex'
 export default createStore({
 
 	state: {
-		colorSlots: [
-			{
-				id: 1,
-				color: 'transparent',
-				lock: false,
-				shades: [],
-			},
-			{
-				id: 2,
-				color: 'transparent',
-				lock: false,
-				shades: [],
-			},
-			{
-				id: 3,
-				color: 'transparent',
-				lock: false,
-				shades: [],
-			},
-			{
-				id: 4,
-				color: 'transparent',
-				lock: false,
-				shades: [],
-			},
-			{
-				id: 5,
-				color: 'transparent',
-				lock: false,
-				shades: [],
-			},
-			{
-				id: 6,
-				color: 'transparent',
-				lock: false,
-				shades: [],
-			},
-		],
+		colorSlots: [],
+		default_colors_num: 6,
 	},
 
 	getters: {
@@ -70,11 +34,20 @@ export default createStore({
 		SET_COLOR(state, {id, newColor}) {
 			state.colorSlots  = state.colorSlots.map((colorSlot) => {
 				if ( colorSlot.id === id ) {
-					colorSlot.color = newColor
+					colorSlot.color = '#' + newColor
 					colorSlot.shades = []
 				}
 
 				return colorSlot
+			})
+		},
+
+		SET_COLOR_SLOT(state, color) {
+			state.colorSlots.push({
+				id: state.colorSlots.length + 1,
+				color: '#' + color,
+				lock: false,
+				shades: [],
 			})
 		},
 
@@ -91,7 +64,9 @@ export default createStore({
 		SET_SHADES(state, { color, shades }) {
 			state.colorSlots  = state.colorSlots.map((colorSlot) => {
 				if ( colorSlot.color === color ) {
-					colorSlot.shades = shades
+					colorSlot.shades = shades.map((clr) => {
+						return '#' + clr
+					})
 				}
 
 				return colorSlot

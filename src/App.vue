@@ -24,10 +24,10 @@
 					class="shade"
 					v-for="shade in store.getters.colorShades(colorSlot.id)"
 					:key="shade"
-					:style="{ background: '#' + shade }"
-					@click="changeColor('#' + shade, colorSlot.id)"
+					:style="{ background: shade }"
+					@click="changeColor(shade, colorSlot.id)"
 				>
-					<span>{{ '#' + shade }}</span>
+					<span>{{ shade }}</span>
 				</div>
 			</div>
 		</div>
@@ -53,7 +53,7 @@ function getRandomColor() {
 		color += characters[Math.floor(Math.random() * characters.length)]
 	}
 
-	return '#' + color
+	return color
 
 }
 
@@ -68,11 +68,14 @@ function generateColors(e) {
 		}
 	}
 	else {
-		store.state.colorSlots.forEach((colorSlot) => {
-			if (!colorSlot.lock) {
-				store.commit('SET_COLOR', { id: colorSlot.id, newColor: getRandomColor() })
+		if ( document.location.hash.length > 0 ) {
+			getColorsFromString(document.location.hash)
+		}
+		else {
+			for (let i = 0; i < store.state.default_colors_num; i++) {
+				store.commit('SET_COLOR_SLOT', getRandomColor())
 			}
-		})
+		}
 	}
 }
 
@@ -87,11 +90,19 @@ function toggleLock(id) {
 }
 
 function changeColor(newColor, id) {
-	store.commit('SET_COLOR', { id: id, newColor: newColor })
+	store.commit('SET_COLOR', { id: id, newColor: newColor.slice(1) })
 }
 
 function updateHash() {
 	location.hash = store.getters.colorsWithoutHash.join('-') 
+}
+
+function getColorsFromString(string) {
+	string.slice(1).split('-').forEach((color) => {
+		if ( /^[0123456789abcdef]{6,6}/.test(color) ) {
+			store.commit('SET_COLOR_SLOT', color)
+		}
+	})
 }
 
 
