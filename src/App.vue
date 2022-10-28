@@ -6,14 +6,19 @@
 			:key="colorSlot.id"
 			:style="{ background: colorSlot.color }"
 		>
-			<div class="color_name">{{ colorSlot.color }}</div>
+
+			<div class="color_name" @click="copyToClipboard(colorSlot.color)">{{ colorSlot.color }}</div>
+
 			<div
 				class="status"
 				:class="{ lock: colorSlot.lock }"
 				@click="toggleLock(colorSlot.id)"
 			></div>
 
-			<div class="show_shades" @click="generateShades(colorSlot.color)">Shades</div>
+			<div class="show_shades" @click="generateShades(colorSlot.color)">Оттенки</div>
+
+			<div class="delete_color" @click="geleteColorSlot(colorSlot.id)"></div>
+
 			<div
 				class="shades"
 				:class="{
@@ -94,7 +99,7 @@ function changeColor(newColor, id) {
 }
 
 function updateHash() {
-	location.hash = store.getters.colorsWithoutHash.join('-') 
+	document.location.hash = store.getters.colorsWithoutHash.join('-') 
 }
 
 function getColorsFromString(string) {
@@ -103,6 +108,14 @@ function getColorsFromString(string) {
 			store.commit('SET_COLOR_SLOT', color)
 		}
 	})
+}
+
+function copyToClipboard(text) {
+	return navigator.clipboard.writeText(text)
+}
+
+function geleteColorSlot(id) {
+	store.commit('DELETE_COLOR_SLOT', id)
 }
 
 
@@ -196,6 +209,16 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+
+	&:hover {
+		.show_shades {
+			visibility: visible;
+		}
+
+		.delete_color {
+			visibility: visible;
+		}
+	}
 }
 
 .color_name {
@@ -234,6 +257,7 @@ body {
 }
 
 .show_shades {
+	visibility: hidden;
 	margin-top: 20px;
 	padding: 6px 10px;
 	font-size: 16px;
@@ -281,6 +305,20 @@ body {
 		& > span {
 			opacity: 1;
 		}
+	}
+}
+
+.delete_color {
+	visibility: hidden;
+	margin-top: 20px;
+	width: 24px;
+	height: 24px;
+	background: rgba(255, 255, 255, 0.5) url(@/assets/images/delete.svg);
+	border-radius: 6px;
+	cursor: pointer;
+
+	&:hover {
+		background-color: rgba(255, 255, 255, 0.9);
 	}
 }
 </style>

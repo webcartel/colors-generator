@@ -32,7 +32,7 @@ export default createStore({
 	mutations: {
 
 		SET_COLOR(state, {id, newColor}) {
-			state.colorSlots  = state.colorSlots.map((colorSlot) => {
+			state.colorSlots = state.colorSlots.map((colorSlot) => {
 				if ( colorSlot.id === id ) {
 					colorSlot.color = '#' + newColor
 					colorSlot.shades = []
@@ -48,6 +48,14 @@ export default createStore({
 				color: '#' + color,
 				lock: false,
 				shades: [],
+			})
+		},
+
+		DELETE_COLOR_SLOT(state, id) {
+			state.colorSlots = state.colorSlots.filter((colorSlot) => {
+				if ( colorSlot.id !== id ) {
+					return true
+				}
 			})
 		},
 
