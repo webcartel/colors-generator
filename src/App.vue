@@ -2,7 +2,7 @@
 	<div class="cols">
 		<div
 			class="col"
-			v-for="colorSlot in store.getters.colorSlots"
+			v-for="(colorSlot, index) in store.getters.colorSlots"
 			:key="colorSlot.id"
 			:style="{ background: colorSlot.color }"
 		>
@@ -16,6 +16,11 @@
 			></div>
 
 			<div class="show_shades" @click="generateShades(colorSlot.color)">Оттенки</div>
+
+			<div class="arrows">
+				<div class="l_arrow" @click="moveColorSlot('l', index)"></div>
+				<div class="r_arrow" @click="moveColorSlot('r', index)"></div>
+			</div>
 
 			<div class="delete_color" @click="geleteColorSlot(colorSlot.id)"></div>
 
@@ -118,6 +123,10 @@ function geleteColorSlot(id) {
 	store.commit('DELETE_COLOR_SLOT', id)
 }
 
+function moveColorSlot(direction, index) {
+	store.commit('CHANGE_COLOR_SLOT_POSITION', { direction: direction, index: index })
+}
+
 
 function pad(number, length) {
 	var str = '' + number;
@@ -216,6 +225,10 @@ body {
 		}
 
 		.delete_color {
+			visibility: visible;
+		}
+
+		.arrows {
 			visibility: visible;
 		}
 	}
@@ -321,4 +334,50 @@ body {
 		background-color: rgba(255, 255, 255, 0.9);
 	}
 }
+
+.arrows {
+	visibility: hidden;
+	position: relative;
+	display: flex;
+	margin-top: 20px;
+	width: 80px;
+	height: 36px;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.l_arrow {
+	position: relative;
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-right: 1px solid rgba(0, 0, 0, 0.2);
+	background: rgba(255, 255, 255, 0.5);
+	cursor: pointer;
+
+	&:before {
+		content: '';
+		display: block;
+		width: 14px;
+		height: 14px;
+		border-left: 2px solid #000;
+		border-bottom: 2px solid #000;
+		transform: rotate(45deg);
+	}
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.9);
+	}
+}
+
+.r_arrow {
+	@extend .l_arrow;
+	border: none;
+
+	&:before {
+		transform: rotate(225deg);
+	}
+}
+
 </style>

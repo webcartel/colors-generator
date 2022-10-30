@@ -59,6 +59,18 @@ export default createStore({
 			})
 		},
 
+		CHANGE_COLOR_SLOT_POSITION(state, { direction, index }) {
+
+			if ( direction === 'l' && index > 0 ) {
+				state.colorSlots.splice(index-1, 2, state.colorSlots[index], state.colorSlots[index-1])
+			}
+
+			if ( direction === 'r' && index < state.colorSlots.length ) {
+				state.colorSlots.splice(index, 2, state.colorSlots[index+1], state.colorSlots[index])
+			}
+
+		},
+
 		TOGGLE_LOCK(state, id) {
 			state.colorSlots  = state.colorSlots.map((colorSlot) => {
 				if ( colorSlot.id === id ) {
