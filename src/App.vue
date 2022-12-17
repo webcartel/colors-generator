@@ -1,5 +1,9 @@
 <template>
+
+	<Panel :slots_amount="store.getters.colorSlotsAmount" />
+
 	<div class="cols">
+
 		<div
 			class="col"
 			v-for="(colorSlot, index) in store.getters.colorSlots"
@@ -41,13 +45,16 @@
 				</div>
 			</div>
 		</div>
+
 	</div>
+
 </template>
 
 
 <script setup>
 import { onMounted, onBeforeUpdate, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
+import Panel from '@/components/Panel';
 
 
 const store = useStore()
@@ -204,12 +211,18 @@ onBeforeUnmount(() => {
 
 html,
 body {
-	min-height: 100vh;
+	height: 100%;
+}
+
+#app {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 
 .cols {
 	display: flex;
-	min-height: 100vh;
+	flex: 1;
 }
 
 .col {

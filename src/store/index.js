@@ -13,6 +13,10 @@ export default createStore({
 			return state.colorSlots
 		},
 
+		colorSlotsAmount: (state) => {
+			return state.colorSlots.length
+		},
+
 		colorsWithoutHash: (state) => {
 			return state.colorSlots.map((colorSlot) => {
 				return colorSlot.color.slice(1)
