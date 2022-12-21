@@ -2,9 +2,9 @@
 
     <div class="panel">
 
-        <div class="panel__controls">
+        <div class="flex">
 
-            <button class="btn">Обновить цвета</button>
+            <button class="btn mr-[20px]">Обновить цвета</button>
             
             <div class="slots_amount">
                 <div class="slots_amount__btn">&#65123;</div>
@@ -31,12 +31,6 @@ const { slots_amount } = defineProps({ slots_amount: Number })
     display: flex;
     align-items: center;
     padding: 10px;
-
-    &__controls {
-        display: flex;
-        justify-content: space-evenly;
-        width: 100%;
-    }
 }
 
 .slots_amount {
