@@ -11,7 +11,7 @@
 			:style="{ background: colorSlot.color }"
 		>
 
-			<div class="color_name" @click="copyToClipboard(colorSlot.color)">{{ colorSlot.color }}</div>
+			<div class="color_name" @click="copyToClipboard(colorSlot.color)" v-tooltip="{ text: 'Нажмите, чтобы скопировать код цвета', position: 'bottom' }">{{ colorSlot.color }}</div>
 
 			<div
 				class="status"
