@@ -65,7 +65,7 @@ const Tooltip = {
         el.addEventListener('mouseout', tooltip.bind(null, el, value, vnode))
     },
 
-    beforeUnmount: () => {
+    beforeUnmount: ( el, { value }, vnode ) => {
         el.removeEventListener('mouseover', tooltip)
         el.removeEventListener('mouseout', tooltip)
     },
