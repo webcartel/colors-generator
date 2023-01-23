@@ -4,12 +4,12 @@
 
         <div class="flex">
 
-            <button class="btn mr-[20px]" v-tooltip="{ text: 'Обновить цвета можно нажатием пробела', position: 'bottom' }">Обновить цвета</button>
+            <button class="btn mr-[20px]" v-tooltip="{ text: 'Обновить цвета можно нажатием пробела', position: 'bottom' }" @mousedown="$emit('generatecolors', {code: 'Space'})">Обновить цвета</button>
             
             <div class="slots_amount">
-                <div class="slots_amount__btn">&#65123;</div>
+                <div class="slots_amount__btn" @mousedown="$emit('removecolorslot')">&#65123;</div>
                 <div class="slots_amount__counter">{{ slots_amount }}</div>
-                <div class="slots_amount__btn">+</div>
+                <div class="slots_amount__btn" @mousedown="$emit('addcolorslot')">+</div>
             </div>
 
         </div>

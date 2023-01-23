@@ -1,6 +1,11 @@
 <template>
 
-	<Panel :slots_amount="store.getters.colorSlotsAmount" />
+	<Panel
+		:slots_amount="store.getters.colorSlotsAmount"
+		@generatecolors="generateColors"
+		@removecolorslot="geleteColorSlot()"
+		@addcolorslot="addColorSlot()"
+	/>
 
 	<div class="cols">
 
@@ -111,10 +116,13 @@ function changeColor(newColor, id) {
 }
 
 function updateHash() {
-	document.location.hash = store.getters.colorsWithoutHash.join('-') 
+	document.location.hash = store.getters.colorsWithoutHash.join('-')
 }
 
 function getColorsFromString(string) {
+
+	store.commit('DELETE_ALL_COLOR_SLOTS')
+	
 	string.slice(1).split('-').forEach((color) => {
 		if ( /^[0123456789abcdef]{6,6}/.test(color) ) {
 			store.commit('SET_COLOR_SLOT', color)
@@ -127,7 +135,16 @@ function copyToClipboard(text) {
 }
 
 function geleteColorSlot(id) {
-	store.commit('DELETE_COLOR_SLOT', id)
+	if ( id ) {
+		store.commit('DELETE_COLOR_SLOT', id)
+	}
+	else {
+		store.commit('DELETE_LAST_COLOR_SLOT')
+	}
+}
+
+function addColorSlot() {
+	store.commit('SET_COLOR_SLOT', getRandomColor())
 }
 
 function moveColorSlot(direction, index) {

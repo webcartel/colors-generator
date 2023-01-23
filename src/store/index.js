@@ -63,6 +63,15 @@ export default createStore({
 			})
 		},
 
+		DELETE_LAST_COLOR_SLOT(state) {
+			state.colorSlots.pop()
+			state.colorSlots = state.colorSlots
+		},
+
+		DELETE_ALL_COLOR_SLOTS(state) {
+			state.colorSlots = []
+		},
+
 		CHANGE_COLOR_SLOT_POSITION(state, { direction, index }) {
 
 			if ( direction === 'l' && index > 0 ) {

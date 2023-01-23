@@ -11,6 +11,8 @@
     font-size: 13px;
     color: #fff;
     background: #000;
+    user-select: none;
+    pointer-events: none;
     z-index: 99999999;
     opacity: 0;
 
