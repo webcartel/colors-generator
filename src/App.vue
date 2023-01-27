@@ -53,16 +53,24 @@
 
 	</div>
 
+	<Message :options="message" @isHide="message.show = false" />
+
 </template>
 
 
 <script setup>
-import { onMounted, onBeforeUpdate, onBeforeUnmount } from 'vue';
+import { onMounted, onBeforeUpdate, onBeforeUnmount, reactive, nextTick } from 'vue';
 import { useStore } from 'vuex';
 import Panel from '@/components/Panel';
-
+import Message from '@/components/Message';
 
 const store = useStore()
+
+const message = reactive({
+	text: 'Код скопирован в буфер обмена',
+	show: false,
+	time: 3000,
+})
 
 
 function getRandomColor() {
@@ -131,6 +139,7 @@ function getColorsFromString(string) {
 }
 
 function copyToClipboard(text) {
+	message.show = true
 	return navigator.clipboard.writeText(text)
 }
 
