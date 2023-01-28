@@ -4,7 +4,7 @@
 
         <div class="flex">
 
-            <button class="btn mr-[20px]" v-tooltip="{ text: 'Обновить цвета можно нажатием пробела', position: 'bottom' }" @mousedown="$emit('generatecolors', {code: 'Space'})">Обновить цвета</button>
+            <button class="btn mr-[20px] text-[13.333px]" v-tooltip="{ text: 'Обновить цвета можно нажатием пробела', position: 'bottom' }" @mousedown="$emit('generatecolors', {code: 'Space'})">Обновить цвета</button>
             
             <div class="slots_amount">
                 <div class="slots_amount__btn" @mousedown="$emit('removecolorslot')">&#65123;</div>

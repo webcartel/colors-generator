@@ -13,17 +13,21 @@ const { options } = defineProps({ options: {} })
 const emit = defineEmits(['isHide'])
 
 let show = ref(false)
+let timeout = null
 
 
 watch(options, (newValue) => {
 	if ( newValue.show === true ) {
-		show.value = true
+		show.value = false
+		clearTimeout(timeout)
 		setTimeout(() => {
+			show.value = true
+			timeout = setTimeout(() => {
 			emit('isHide')
-		}, newValue.time)
+		}, newValue.duration)
+		}, 100);
 	}
-
-	if ( newValue.show === false ) {
+	else {
 		show.value = false
 	}
 })
