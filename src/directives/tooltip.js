@@ -20,6 +20,8 @@ function getRect(elem) {
         left: Math.round(left),
         width: Math.round(box.width),
         height: Math.round(box.height),
+        left_offset: Math.round(left),
+        right_offset: Math.round(window.innerWidth - (Math.round(left) + Math.round(box.width))),
     }
 }
 
@@ -32,7 +34,7 @@ function tooltip(el, value, vnode, event) {
     
         const text = typeof value === 'string' ? value : value.text
         const position = value.position === undefined ? 'bottom' : value.position
-        const offset = value.offset === undefined ? '-10px' : value.offset
+        const offset = value.offset === undefined ? -10 : value.offset
     
         let el_rect = getRect(el)
     
@@ -40,12 +42,31 @@ function tooltip(el, value, vnode, event) {
         tooltip.innerHTML = text
         tooltip.classList.add('tooltip', 'show')
         tooltip.setAttribute('id', 'tooltip')
-        document.querySelector('body').appendChild(tooltip)
-    
         tooltip.style.top = el_rect.bottom - parseInt(offset) + 'px'
-        tooltip.style.left = el_rect.left + 'px'
         tooltip.style.maxWidth = 200 + 'px'
         tooltip.style.width = 100 + '%'
+
+        document.querySelector('body').appendChild(tooltip)
+        console.log(el_rect);
+        
+        if ( el_rect.width < tooltip.offsetWidth ) {
+
+            let halfDiff = (tooltip.offsetWidth - el_rect.width) / 2
+
+            if ( el_rect.left_offset >= halfDiff && el_rect.right_offset >= halfDiff ) {
+                tooltip.style.left = el_rect.left - halfDiff + 'px'
+            }
+            
+            if ( el_rect.left_offset < halfDiff && el_rect.right_offset > halfDiff ) {
+                tooltip.style.left = el_rect.left + 'px'
+            }
+
+            if ( el_rect.left_offset > halfDiff && el_rect.right_offset < halfDiff ) {
+                tooltip.style.left = el_rect.right - el_rect.width - (tooltip.offsetWidth - el_rect.width) + 'px'
+            }
+
+        }
+
     }
 
     if ( event.type === 'mouseout' ) {
